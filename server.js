@@ -1,9 +1,21 @@
+import * as https from 'https';
+import fs from 'fs';
 import { WebSocketServer } from "ws";
-import { configDotenv } from "dotenv";
+import dotenv from 'dotenv';
 
-const port = process.env.PORT || 3000;
+dotenv.config();
 
-const wss = new WebSocketServer({ port: 3000 });
+const port = process.config.PORT || 3030;
+
+const sslKeyPath = process.env.SSL_KEY_PATH;
+const sslCertPath = process.env.SSL_CERT_PATH;
+
+const server = https.createServer({
+    key: fs.readFileSync(sslKeyPath),
+    cert: fs.readFileSync(sslCertPath),
+});
+
+const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
 
@@ -17,3 +29,7 @@ wss.on('connection', (ws) => {
     }, 2000);
     
 });
+
+server.listen(3030, () => {
+    console.log("WSS server started on https://localhost:3030");
+})
