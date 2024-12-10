@@ -3,6 +3,9 @@ import fs from 'fs';
 import { WebSocketServer } from "ws";
 import dotenv from 'dotenv';
 
+import { loadData } from './src/utils.js';
+import { createMessage } from './src/emitter.js';
+
 dotenv.config();
 
 const port = process.config.PORT || 3030;
@@ -15,15 +18,16 @@ const server = https.createServer({
     cert: fs.readFileSync(sslCertPath),
 });
 
+const data = loadData();
+
 const wss = new WebSocketServer({ server });
 
 wss.on('connection', (ws) => {
 
     console.log('Client connected. Emitting message...');
 
-    const encryptedMessage = "asjdgjhgjhdgsjhdfhgdsfghfghds"; // encrypted message
-
     setInterval(() => {
+        const encryptedMessage = createMessage(data);
         ws.send(encryptedMessage); 
         console.log('Message sent: ', encryptedMessage);
     }, 2000);
