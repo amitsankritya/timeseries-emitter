@@ -30,7 +30,7 @@ wss.on('connection', (ws) => {
         const encryptedMessage = createMessage(data);
         ws.send(encryptedMessage); 
         console.log('Message sent: ', encryptedMessage);
-    }, 2000);
+    }, 10000);
     
 });
 
